@@ -498,7 +498,8 @@ footer{
       <li><a id="nav-faq" onclick="goTo('faq')">FAQ</a></li>
     </ul>
     <div class="nav-right">
-      <button class="cart-btn" onclick="openCart()">
+      <a id="nav-cart" style="display:none;"></a><!-- router target for cart highlight -->
+      <button class="cart-btn" onclick="goTo('cart')">
         🛒 Cart
         <span class="cart-badge" id="cartBadge">0</span>
       </button>
@@ -609,6 +610,50 @@ footer{
   <div class="faq-wrap" id="faqWrap"></div>
 </div>
 
+<!-- ════════════ CART PAGE ════════════ -->
+<div id="page-cart" class="page">
+  <h2 class="sec-title">🛒 Your Cart</h2>
+  <div class="divider"></div>
+  <div style="max-width:780px;margin:0 auto;padding:0 1.5rem 5rem;">
+
+    <!-- empty state -->
+    <div id="cartPageEmpty" style="text-align:center;padding:4rem 0;color:var(--text-dim);">
+      <div style="font-size:4rem;margin-bottom:0.8rem;">🛒</div>
+      <p style="font-size:1.1rem;font-weight:700;color:var(--text);">Your cart is empty</p>
+      <p style="font-size:0.9rem;margin-top:0.4rem;">Looks like you haven't added anything yet.</p>
+      <button class="hero-btn" style="margin-top:1.6rem;font-size:0.88rem;padding:0.7rem 1.8rem;" onclick="goTo('shop')">Browse Shop</button>
+    </div>
+
+    <!-- items list -->
+    <div id="cartPageItems"></div>
+
+    <!-- summary box -->
+    <div id="cartPageSummary" style="display:none;background:var(--surface);border-radius:var(--radius);border:1px solid #2e2e3e;padding:1.8rem;margin-top:1.5rem;">
+      <h3 style="font-family:'Bangers',cursive;font-size:1.4rem;letter-spacing:2px;color:var(--accent);margin-bottom:1rem;">Order Summary</h3>
+
+      <div style="display:flex;justify-content:space-between;padding:0.55rem 0;border-bottom:1px solid #2e2e3e;">
+        <span style="color:var(--text-dim);font-size:0.88rem;">Subtotal</span>
+        <span id="cpSubtotal" style="font-weight:800;color:var(--text);">$0.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:0.55rem 0;border-bottom:1px solid #2e2e3e;">
+        <span style="color:var(--text-dim);font-size:0.88rem;">Shipping</span>
+        <span style="font-weight:800;color:var(--accent);font-size:0.82rem;">FREE</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:0.55rem 0;border-bottom:1px solid #2e2e3e;">
+        <span style="color:var(--text-dim);font-size:0.88rem;">Tax (est.)</span>
+        <span id="cpTax" style="font-weight:800;color:var(--text);">$0.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:0.7rem 0 0;margin-top:0.3rem;">
+        <span style="font-weight:800;font-size:1rem;color:var(--text);">Total</span>
+        <span id="cpTotal" style="font-weight:800;font-size:1.3rem;color:var(--accent2);">$0.00</span>
+      </div>
+
+      <button class="btn-submit" style="margin-top:1.4rem;" onclick="doCheckout()">Proceed to Checkout →</button>
+      <button onclick="goTo('shop')" style="width:100%;padding:0.6rem;border-radius:50px;background:transparent;border:1px solid #2e2e3e;color:var(--text-dim);font-weight:700;font-size:0.85rem;cursor:pointer;margin-top:0.7rem;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='#2e2e3e'">← Continue Shopping</button>
+    </div>
+  </div>
+</div>
+
 <!-- ════════════ FOOTER ════════════ -->
 <footer>
   <div class="footer-inner">
@@ -619,10 +664,10 @@ footer{
     <div class="footer-col">
       <h4>Shop</h4>
       <ul>
-        <li><a onclick="goTo('shop');filterCategory('figures')">Figures</a></li>
-        <li><a onclick="goTo('shop');filterCategory('apparel')">Apparel</a></li>
-        <li><a onclick="goTo('shop');filterCategory('accessories')">Accessories</a></li>
-        <li><a onclick="goTo('shop');filterCategory('posters')">Posters</a></li>
+        <li><a onclick="goTo('shop');setTimeout(()=>filterCategory('figures'),50)">Figures</a></li>
+        <li><a onclick="goTo('shop');setTimeout(()=>filterCategory('apparel'),50)">Apparel</a></li>
+        <li><a onclick="goTo('shop');setTimeout(()=>filterCategory('accessories'),50)">Accessories</a></li>
+        <li><a onclick="goTo('shop');setTimeout(()=>filterCategory('posters'),50)">Posters</a></li>
       </ul>
     </div>
     <div class="footer-col">
@@ -646,22 +691,6 @@ footer{
   </div>
   <div class="footer-bottom">© 2026 OtakuVault. All rights reserved. Made with ❤️ for anime fans.</div>
 </footer>
-
-<!-- ════════════ CART PANEL ════════════ -->
-<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
-<div class="cart-panel" id="cartPanel">
-  <div class="cart-head">
-    <h3>🛒 Your Cart</h3>
-    <button class="cart-close" onclick="closeCart()">✕</button>
-  </div>
-  <div class="cart-body" id="cartBody"></div>
-  <div class="cart-foot" id="cartFoot" style="display:none;">
-    <div class="cart-total-row"><span>Subtotal</span><strong id="cartSubtotal">$0.00</strong></div>
-    <div class="cart-total-row"><span>Shipping</span><strong style="color:var(--accent);font-size:.82rem;">FREE</strong></div>
-    <div class="cart-total-row" style="border-top:1px solid #2e2e3e;padding-top:.6rem;margin-top:.6rem;"><span>Total</span><strong id="cartTotal">$0.00</strong></div>
-    <button class="btn-checkout" onclick="doCheckout()">Checkout →</button>
-  </div>
-</div>
 
 <!-- ════════════ TOAST ════════════ -->
 <div class="toast" id="toast">
@@ -696,10 +725,74 @@ const FAQS = [
   { q:"What payment methods do you accept?", a:"We accept all major credit cards, PayPal, Apple Pay, and Google Pay. All transactions are SSL encrypted." },
 ];
 
+// ─── PAGE TITLES MAP ───
+const PAGE_TITLES = {
+  home:    "OTAKU VAULT — Anime Merchandise",
+  shop:    "Shop — OTAKU VAULT",
+  about:   "About Us — OTAKU VAULT",
+  contact: "Contact — OTAKU VAULT",
+  faq:     "FAQ — OTAKU VAULT",
+  cart:    "Cart — OTAKU VAULT"
+};
+
 // ─── CART STATE ───
 let cart = [];
 
-// ─── RENDER PRODUCTS ───
+// ════════════════════════════════════════
+// ROUTER  (History API based)
+// ════════════════════════════════════════
+const VALID_PAGES = ['home','shop','about','contact','faq','cart'];
+
+function goTo(page, pushState = true){
+  if(!VALID_PAGES.includes(page)) page = 'home';
+
+  // 1. swap visible page
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+
+  // 2. highlight nav link
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + page);
+  if(navEl) navEl.classList.add('active');
+
+  // 3. update browser URL & title
+  const url = page === 'home' ? '/' : '/' + page;
+  if(pushState){
+    history.pushState({ page }, PAGE_TITLES[page] || '', url);
+  } else {
+    history.replaceState({ page }, PAGE_TITLES[page] || '', url);
+  }
+  document.title = PAGE_TITLES[page] || 'OTAKU VAULT';
+
+  // 4. scroll top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // 5. lifecycle hooks
+  if(page === 'cart') renderCartPage();
+}
+
+// back / forward button
+window.addEventListener('popstate', function(e){
+  const page = (e.state && e.state.page) || 'home';
+  goTo(page, false); // false = don't push again
+});
+
+// initial load — figure out which page from the current URL
+(function initRoute(){
+  const path = window.location.pathname.replace(/\//g,'').toLowerCase();
+  const page = VALID_PAGES.includes(path) ? path : 'home';
+  // hide all, show the right one without pushing a new entry
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + page);
+  if(navEl) navEl.classList.add('active');
+  history.replaceState({ page }, PAGE_TITLES[page] || '', page === 'home' ? '/' : '/' + page);
+  document.title = PAGE_TITLES[page] || 'OTAKU VAULT';
+  if(page === 'cart') renderCartPage();
+})();
+
+// ─── RENDER PRODUCT CARDS ───
 function renderCards(containerId, items){
   const el = document.getElementById(containerId);
   el.innerHTML = items.map(p => `
@@ -771,16 +864,6 @@ function toggleFaq(i){
   if(!wasOpen) item.classList.add('open');
 }
 
-// ─── NAVIGATION ───
-function goTo(page){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+page).classList.add('active');
-  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
-  const navEl = document.getElementById('nav-'+page);
-  if(navEl) navEl.classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
 // ─── CART LOGIC ───
 function addToCart(id){
   const product = PRODUCTS.find(p=>p.id===id);
@@ -794,7 +877,7 @@ function addToCart(id){
 function removeFromCart(id){
   cart = cart.filter(c=>c.id!==id);
   updateCartBadge();
-  renderCartBody();
+  renderCartPage();
 }
 
 function changeQty(id, delta){
@@ -802,8 +885,7 @@ function changeQty(id, delta){
   if(!item) return;
   item.qty += delta;
   if(item.qty<=0) removeFromCart(id);
-  else renderCartBody();
-  updateCartBadge();
+  else { updateCartBadge(); renderCartPage(); }
 }
 
 function updateCartBadge(){
@@ -811,67 +893,71 @@ function updateCartBadge(){
   document.getElementById('cartBadge').textContent = total;
 }
 
-function renderCartBody(){
-  const body = document.getElementById('cartBody');
-  const foot = document.getElementById('cartFoot');
-  if(cart.length===0){
-    body.innerHTML = `<div class="cart-empty"><div class="ce-icon">🛒</div>Your cart is empty.<br/><small>Add some merch!</small></div>`;
-    foot.style.display='none';
+// ─── FULL CART PAGE RENDERER ───
+function renderCartPage(){
+  const empty   = document.getElementById('cartPageEmpty');
+  const items   = document.getElementById('cartPageItems');
+  const summary = document.getElementById('cartPageSummary');
+
+  if(cart.length === 0){
+    empty.style.display   = 'block';
+    items.innerHTML       = '';
+    summary.style.display = 'none';
     return;
   }
-  foot.style.display='block';
-  body.innerHTML = cart.map(item => `
-    <div class="cart-item">
-      <div class="ci-thumb">${item.emoji}</div>
-      <div class="ci-info">
-        <h4>${item.name}</h4>
-        <div class="ci-price">$${(item.price*item.qty).toFixed(2)}</div>
-        <div class="ci-qty">
-          <button onclick="changeQty(${item.id},-1)">−</button>
-          <span>${item.qty}</span>
-          <button onclick="changeQty(${item.id},1)">+</button>
+
+  empty.style.display   = 'none';
+  summary.style.display = 'block';
+
+  // render each row
+  items.innerHTML = cart.map(item => `
+    <div style="background:var(--surface);border-radius:var(--radius);border:1px solid #2e2e3e;padding:1.2rem;margin-bottom:0.8rem;display:flex;gap:1rem;align-items:center;">
+      <!-- thumb -->
+      <div style="width:74px;height:74px;border-radius:10px;background:var(--surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:2rem;">${item.emoji}</div>
+      <!-- info -->
+      <div style="flex:1;min-width:0;">
+        <h4 style="font-size:0.92rem;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.name}</h4>
+        <p style="font-size:0.8rem;color:var(--text-dim);margin-top:0.15rem;">Unit price: <strong style="color:var(--accent2);">$${item.price.toFixed(2)}</strong></p>
+        <!-- qty controls -->
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.6rem;">
+          <button onclick="changeQty(${item.id},-1)" style="background:var(--surface2);border:1px solid #2e2e3e;color:var(--text);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:1rem;font-weight:800;display:flex;align-items:center;justify-content:center;transition:background .2s;" onmouseover="this.style.background='var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.background='var(--surface2)';this.style.borderColor='#2e2e3e'">−</button>
+          <span style="font-size:0.95rem;font-weight:800;min-width:22px;text-align:center;">${item.qty}</span>
+          <button onclick="changeQty(${item.id},1)" style="background:var(--surface2);border:1px solid #2e2e3e;color:var(--text);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:1rem;font-weight:800;display:flex;align-items:center;justify-content:center;transition:background .2s;" onmouseover="this.style.background='var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.background='var(--surface2)';this.style.borderColor='#2e2e3e'">+</button>
+          <a onclick="removeFromCart(${item.id})" style="margin-left:0.8rem;color:var(--text-dim);font-size:0.76rem;cursor:pointer;transition:color .2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-dim)'">✕ Remove</a>
         </div>
-        <a class="ci-rm" onclick="removeFromCart(${item.id})">Remove</a>
+      </div>
+      <!-- line total -->
+      <div style="text-align:right;flex-shrink:0;">
+        <span style="font-size:1.15rem;font-weight:800;color:var(--accent2);">$${(item.price*item.qty).toFixed(2)}</span>
       </div>
     </div>
   `).join('');
-  const sub = cart.reduce((s,c)=>s+(c.price*c.qty),0);
-  document.getElementById('cartSubtotal').textContent = '$'+sub.toFixed(2);
-  document.getElementById('cartTotal').textContent = '$'+sub.toFixed(2);
-}
 
-function openCart(){
-  document.getElementById('cartOverlay').classList.add('open');
-  document.getElementById('cartPanel').classList.add('open');
-  renderCartBody();
-}
-function closeCart(){
-  document.getElementById('cartOverlay').classList.remove('open');
-  document.getElementById('cartPanel').classList.remove('open');
+  // totals
+  const sub = cart.reduce((s,c)=>s+(c.price*c.qty),0);
+  const tax = sub * 0.08;
+  document.getElementById('cpSubtotal').textContent = '$' + sub.toFixed(2);
+  document.getElementById('cpTax').textContent      = '$' + tax.toFixed(2);
+  document.getElementById('cpTotal').textContent   = '$' + (sub+tax).toFixed(2);
 }
 
 function doCheckout(){
   if(cart.length===0) return;
-  closeCart();
   showToast('🎉','<strong>Order placed!</strong><br/>This is a demo — no payment was charged.');
   cart=[];
   updateCartBadge();
+  renderCartPage();
 }
 
 // ─── CONTACT FORM ───
 function handleContact(e){
   e.preventDefault();
-  const fname = document.getElementById('cf-fname').value;
-  const lname = document.getElementById('cf-lname').value;
-  const email = document.getElementById('cf-email').value;
+  const fname   = document.getElementById('cf-fname').value;
   const subject = document.getElementById('cf-subject').value;
-  const msg = document.getElementById('cf-msg').value;
-  // validation
   if(!subject){
     showToast('⚠️','<strong>Please select a subject</strong><br/>from the dropdown above.');
     return;
   }
-  // success
   showToast('📧','<strong>Message sent!</strong><br/>Thanks '+fname+' — we\'ll get back to you soon.');
   document.getElementById('contactForm').reset();
 }
@@ -881,9 +967,9 @@ let toastTimeout;
 function showToast(icon, html){
   clearTimeout(toastTimeout);
   document.getElementById('toastIcon').textContent = icon;
-  document.getElementById('toastText').innerHTML = html;
+  document.getElementById('toastText').innerHTML   = html;
   document.getElementById('toast').classList.add('show');
-  toastTimeout = setTimeout(()=>document.getElementById('toast').classList.remove('show'),3200);
+  toastTimeout = setTimeout(()=>document.getElementById('toast').classList.remove('show'), 3200);
 }
 </script>
 </body>
